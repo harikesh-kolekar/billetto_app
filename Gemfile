@@ -77,3 +77,5 @@ gem "sidekiq"
 gem "sidekiq-cron"
 gem "rest-client"
 gem "will_paginate"
+gem 'clerk-sdk-ruby', require: "clerk"
+
