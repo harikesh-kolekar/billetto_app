@@ -1,7 +1,9 @@
 require "sidekiq/web"
+require "sidekiq/cron/web"
 Rails.application.routes.draw do
+  resources :events, only: [ :index, :show ]
   mount Sidekiq::Web => "/sidekiq"
-  mount RailsEventStore::Browser => '/res' if Rails.env.development?
+  mount RailsEventStore::Browser => "/res" if Rails.env.development?
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -13,5 +15,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "events#index"
 end

@@ -1,0 +1,5 @@
+etch_events:
+  cron: "*/5 * * * *"
+  class: "FetchEventJob"
+  queue: default
+  description: "Fetch events every 5 minutes"

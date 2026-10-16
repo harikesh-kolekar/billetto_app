@@ -1,0 +1,71 @@
+
+
+<div class="event-details">
+  <div class="event-header">
+    <h2>Event Details</h2>
+    <span class="status">
+      <%= @event.availability ? "Available" :  "Not-Available"%>
+    </span>
+  </div>
+
+  <div class="event-card">
+    <h3><%= @event.title %></h3>
+
+    <p class="description">
+      <%= @event.description %>
+    </p>
+
+    <div class="event-grid">
+      <div>
+        <label>Event ID</label>
+        <p><%= @event.external_id %></p>
+      </div>
+
+      <div>
+        <label>Location</label>
+        <p><%= @event.location %></p>
+      </div>
+
+      <div>
+        <label>Start Date</label>
+        <p>
+          <%= @event.startdate&.strftime("%d %b %Y") %>
+        </p>
+      </div>
+
+      <div>
+        <label>End Date</label>
+        <p>
+          <%= @event.enddate&.strftime("%d %b %Y") %>
+        </p>
+      </div>
+
+      <div>
+        <label>Organiser</label>
+        <p><%= @event.organiser_name %></p>
+      </div>
+
+      <div>
+        <label>Price</label>
+        <p><%= @event.minimum_price %></p>
+      </div>
+
+      <div>
+        <label>Billetto URL </label>
+        <p><%= link_to "Billetto Page",
+          @event.url,
+          class: "btn" %></p>
+      </div>
+
+      <div>
+        <%= image_tag @event.image_link, width: 200 %>
+      </div>
+    </div>
+
+    <div class="event-actions">
+      <%= link_to "← Back to Events",
+          events_path,
+          class: "back-btn" %>
+    </div>
+  </div>
+</div>

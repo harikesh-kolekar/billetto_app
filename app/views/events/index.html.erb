@@ -1,0 +1,28 @@
+<div class="events-container">
+  <h2>Events</h2>
+
+  <table class="events-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>StartDate</th>
+        <th>EndDate</th>
+        <th>Organiser</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+
+    <tbody>
+       <% @events.each do |event| %>
+         <%= render event %>
+        <% end %>
+    </tbody>
+  </table>
+
+  <div class="pagination-container">
+    <%= will_paginate @events,
+          previous_label: "← Previous",
+          next_label: "Next →" %>
+  </div>
+</div>
+

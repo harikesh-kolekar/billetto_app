@@ -1,0 +1,7 @@
+<tr>
+  <td><%= link_to event.title, event_path(event) %></td>
+  <td><%= event.startdate&.strftime("%d %b %Y") %></td>
+  <td><%= event.enddate&.strftime("%d %b %Y") %></td>
+  <td><%= event.organiser_name %></td>
+  <td><%= event.minimum_price %></td>
+</tr>
