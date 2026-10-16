@@ -1,15 +1,11 @@
 
 
-<div class="event-details">
-  <div class="event-header">
-    <h2>Event Details</h2>
-    <span class="status">
-      <%= @event.availability ? "Available" :  "Not-Available"%>
-    </span>
-  </div>
 
   <div class="event-card">
     <h3><%= @event.title %></h3>
+    <span class="status">
+      <%= @event.availability ? "Available" :  "Not-Available"%>
+    </span>
 
     <p class="description">
       <%= @event.description %>
@@ -68,4 +64,3 @@
           class: "back-btn" %>
     </div>
   </div>
-</div>

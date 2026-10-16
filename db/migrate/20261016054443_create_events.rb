@@ -1,7 +1,7 @@
 class CreateEvents < ActiveRecord::Migration[8.1]
   def change
     create_table :events do |t|
-      t.integer :external_id
+      t.integer :external_id, null: false, index: { unique: true }
       t.string :title
       t.text :description
       t.string :image_link

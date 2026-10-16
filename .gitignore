@@ -33,3 +33,5 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+/config/initializers/load_env.rb
+/config/initializers/00_dotenv.rb

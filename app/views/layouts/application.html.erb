@@ -22,7 +22,68 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
+
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="<%= ENV.fetch('CLERK_PUBLISHABLE_KEY') %>"
+    src="<%= ENV.fetch('CLERK_FRONTEND_API_DOMAIN') %>/npm/@clerk/clerk-js@6/dist/clerk.browser.js">
+  </script>
+
   <body>
-    <%= yield %>
+
+    <div class="event-details">
+      <div class="event-header">
+        <h2>Events</h2>
+        <span >
+          <% redirect_url = { redirect_url: request.original_url }.to_query %>
+
+          
+          <% unless clerk.user? %>
+            <%= link_to "Login", "#{ENV.fetch('CLERK_FRONTEND_API_DOMAIN')}/sign-in?#{redirect_url}" %>
+
+            <%= link_to "Sign Up", "#{ENV.fetch('CLERK_FRONTEND_API_DOMAIN')}/sign-up?#{redirect_url}" %>
+          <% else %>
+            <button type="button" id="logout-btn"> Logout </button>
+          <% end %>
+        </span>
+      </div>
+      <%= yield %>
+    </div>
+
+    <script>
+      async function logoutFromClerk() {
+        const button = document.getElementById("logout-btn");
+        if (!button) return;
+
+        button.disabled = true;
+        button.textContent = "Logging out...";
+
+        try {
+          if (!window.Clerk) {
+            throw new Error("Clerk SDK not loaded");
+          }
+
+          await window.Clerk.load();
+
+          await window.Clerk.signOut({
+            redirectUrl: "<%= root_url %>"
+          });
+
+        } catch (error) {
+          console.error("Clerk logout failed:", error);
+          button.disabled = false;
+          button.textContent = "Logout";
+          alert("Logout failed. Please try again.");
+        }
+      }
+
+      document.addEventListener("click", function(event) {
+        if (event.target.closest("#logout-btn")) {
+          event.preventDefault();
+          logoutFromClerk();
+        }
+      });
+    </script>
   </body>
 </html>

@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_054443) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "events", force: :cascade do |t|
-    t.integer "external_id"
+    t.integer "external_id", null: false
     t.string "title"
     t.text "description"
     t.string "image_link"
@@ -30,5 +30,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_054443) do
     t.jsonb "billetto_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_events_on_external_id", unique: true
   end
 end

@@ -9,11 +9,10 @@ module Billetto
     def call
       loop do
         page = @client.list_events(after: @after)
-
-        break unless page[:has_more]
-
         data = page.fetch(:data, [])
         update_or_create_evenets(data)
+        break unless page[:has_more]
+
         @after = data.last&.[](:id)
         raise "Data last element not found" if @after.blank?
       end
