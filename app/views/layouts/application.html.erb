@@ -32,7 +32,13 @@
 
   <body>
 
+
     <div class="event-details">
+      <% flash.each do |type, message| %>
+        <div class="flash-message <%= type %>">
+          <%= message %>
+        </div>
+      <% end %>
       <div class="event-header">
         <h2>Events</h2>
         <span >

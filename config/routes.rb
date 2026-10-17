@@ -1,7 +1,10 @@
 require "sidekiq/web"
 require "sidekiq/cron/web"
 Rails.application.routes.draw do
-  resources :events, only: [ :index, :show ]
+  resources :events, only: [ :index, :show ] do
+    post :up_vote, on: :member
+    post :down_vote, on: :member
+  end
   mount Sidekiq::Web => "/sidekiq"
   mount RailsEventStore::Browser => "/res" if Rails.env.development?
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

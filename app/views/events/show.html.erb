@@ -1,7 +1,4 @@
-
-
-
-  <div class="event-card">
+ <div class="event-card">
     <h3><%= @event.title %></h3>
     <span class="status">
       <%= @event.availability ? "Available" :  "Not-Available"%>
@@ -55,6 +52,21 @@
 
       <div>
         <%= image_tag @event.image_link, width: 200 %>
+        <p>
+          <div class="vote-actions">
+            <%= button_to up_vote_event_path(@event),
+                method: :post,
+                class: "vote-button #{ @current_user_vote_type == 'EventUpvoted' ? 'active' : '' }" do %>
+              👍 <%= @total_up_votes %>
+            <% end %>
+
+            <%= button_to down_vote_event_path(@event),
+                method: :post,
+                class: "vote-button #{ @current_user_vote_type == 'EventDownvoted' ? 'active' : '' }" do %>
+              👎 <%= @total_down_votes %>
+            <% end %>
+          </div>
+        </p>
       </div>
     </div>
 
