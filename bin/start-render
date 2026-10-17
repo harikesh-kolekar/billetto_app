@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+export RAILS_ENV="${RAILS_ENV:-production}"
+export REDIS_URL="${REDIS_URL:-redis://127.0.0.1:6379/0}"
+
+: "${DATABASE_URL:?Set DATABASE_URL in the runtime environment or pass --env-file .env}"
+
+# Start Redis
+redis-server \
+  --bind 127.0.0.1 \
+  --port 6379 \
+  --dir /tmp \
+  --save "" \
+  --appendonly no &
+REDIS_PID=$!
+
+# Start Sidekiq
+bundle exec sidekiq -C config/sidekiq.yml &
+SIDEKIQ_PID=$!
+
+# Start Rails through Thruster
+./bin/thrust ./bin/rails server &
+WEB_PID=$!
+
+shutdown() {
+  trap - TERM INT
+  kill -TERM "$WEB_PID" "$SIDEKIQ_PID" "$REDIS_PID" 2>/dev/null || true
+  wait || true
+}
+
+trap shutdown TERM INT
+
+# Wait until one process exits
+wait -n "$WEB_PID" "$SIDEKIQ_PID" "$REDIS_PID"
+shutdown
