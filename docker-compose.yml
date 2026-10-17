@@ -1,0 +1,74 @@
+x-rails-common: &rails-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: events-app:production
+  restart: unless-stopped
+
+  env_file:
+    - .env
+
+  environment:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: "true"
+    RAILS_SERVE_STATIC_FILES: "true"
+    REDIS_URL: redis://redis:6379/0
+
+  depends_on:
+    redis:
+      condition: service_healthy
+
+services:
+
+  web:
+    <<: *rails-common
+
+    ports:
+      - "3005:80"
+
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://localhost:80/up
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  sidekiq:
+    <<: *rails-common
+
+    command:
+      - bundle
+      - exec
+      - sidekiq
+      - -C
+      - config/sidekiq.yml
+
+    stop_grace_period: 60s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:

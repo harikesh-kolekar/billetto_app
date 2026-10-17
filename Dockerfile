@@ -52,7 +52,11 @@ COPY . .
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 \
+    DATABASE_URL=postgresql://localhost/billetto_build \
+    CLERK_PUBLISHABLE_KEY=pk_test_\
+    CLERK_SECRET_KEY=sk_test_build_placeholder \
+    ./bin/rails assets:precompile
 
 
 
