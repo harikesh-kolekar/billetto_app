@@ -7,7 +7,7 @@ class CreateEventVotes < ActiveRecord::Migration[8.1]
 
       t.timestamps
 
-      t.index [ :user_id, :event_id ], unique: true
+      t.index [  :event_id, :user_id ], unique: true
     end
   end
 end

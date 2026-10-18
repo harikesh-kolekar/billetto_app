@@ -1,8 +1,7 @@
 FactoryBot.define do
   factory :event_vote do
-    event { nil }
+    event { event }
     user_id { "MyString" }
-    event_id { 1 }
-    type { "" }
+    vote_type { "EventDownvoted" }
   end
 end
