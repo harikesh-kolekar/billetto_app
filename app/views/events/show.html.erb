@@ -57,13 +57,13 @@
             <%= button_to up_vote_event_path(@event),
                 method: :post,
                 class: "vote-button #{ @current_user_vote_type == 'EventUpvoted' ? 'active' : '' }" do %>
-              👍 <%= @total_up_votes %>
+              👍 <%= @event.upvotes %>
             <% end %>
 
             <%= button_to down_vote_event_path(@event),
                 method: :post,
                 class: "vote-button #{ @current_user_vote_type == 'EventDownvoted' ? 'active' : '' }" do %>
-              👎 <%= @total_down_votes %>
+              👎 <%= @event.downvotes %>
             <% end %>
           </div>
         </p>
