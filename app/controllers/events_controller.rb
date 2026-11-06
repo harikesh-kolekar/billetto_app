@@ -9,18 +9,20 @@ class EventsController < ApplicationController
   end
 
   def show
-    @total_up_votes = @event.vote_count("EventUpvoted")
-    @total_down_votes = @event.vote_count("EventDownvoted")
     @current_user_vote_type = @event.user_vote_type(clerk.user&.id)
   end
 
   def up_vote
-    @event.up_vote(clerk.user.id)
+    Rails.configuration.command_bus.call(
+      Voting::UpvoteEvent.new(event_id: @event.id, user_id: clerk.user.id)
+    )
     redirect_to event_path(@event)
   end
 
   def down_vote
-    @event.down_vote(clerk.user.id)
+    Rails.configuration.command_bus.call(
+      Voting::DownvoteEvent.new(event_id: @event.id, user_id: clerk.user.id)
+    )
     redirect_to event_path(@event)
   end
 

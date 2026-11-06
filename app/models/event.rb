@@ -1,23 +1,23 @@
 class Event < ApplicationRecord
   validates :title,       presence: true
   validates :external_id, presence: true, uniqueness: true
+  validates :upvotes, :downvotes, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   has_many :event_votes
 
   def up_vote(user_id)
-    return if user_vote_type(user_id) == "EventUpvoted"
-
     create_vote(user_id: user_id, voted: EventUpvoted)
   end
 
   def down_vote(user_id)
-    return if user_vote_type(user_id) == "EventDownvoted"
-
     create_vote(user_id: user_id, voted: EventDownvoted)
    end
 
    def vote_count(vote_type)
-       event_votes.where(vote_type: vote_type).count
+     column = { "EventUpvoted" => :upvotes, "EventDownvoted" => :downvotes }[vote_type]
+     return 0 unless column
+
+     self.class.where(id: id).pick(column) || 0
    end
 
    def user_vote_type(user_id)
@@ -33,11 +33,13 @@ class Event < ApplicationRecord
   end
 
   def create_vote(user_id:, voted:)
-    ActiveRecord::Base.transaction do
-      event_vote = EventVote.find_or_initialize_by(event_id: id, user_id: user_id)
-      event_vote.vote_type = voted.name
-      event_vote.save!
-      Rails.configuration.event_store.publish(voted.new(data: { event_id: id, user_id: user_id }), stream_name: stream_name)
+    with_lock do
+      next if user_vote_type(user_id) == voted.name
+
+      Rails.configuration.event_store.publish(
+        voted.new(data: { event_id: id, user_id: user_id }),
+        stream_name: stream_name
+      )
     end
   end
 
