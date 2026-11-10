@@ -4,7 +4,7 @@ FactoryBot.define do
     external_id { 1 }
     title { "MyTitle" }
     description { "Description text" }
-    image_link { "Image URL" }
+    image_link { "/icon.png" }
     startdate { "2026-10-16 11:14:43" }
     enddate { "2026-10-16 11:14:43" }
     url { "Billeto URL" }

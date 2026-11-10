@@ -22,7 +22,7 @@ class Billetto::EventVotesProjection
       EventVote.where(event_id: event.id).delete_all
       event.update!(upvotes: 0, downvotes: 0)
 
-      Rails.configuration.event_store.read.stream(event.vote_stream_name).forward.each do |vote_event|
+      Rails.configuration.event_store.read.stream(event.stream_name).forward.each do |vote_event|
         call(vote_event) if VOTE_COLUMNS.key?(vote_event.event_type)
       end
     end
