@@ -26,6 +26,10 @@ class Event < ApplicationRecord
     event_vote(user_id)&.vote_type
   end
 
+  def stream_name
+    "Eventvoted$#{id}"
+  end
+
   private
 
   def event_vote(user_id)
@@ -41,9 +45,5 @@ class Event < ApplicationRecord
         stream_name: stream_name
       )
     end
-  end
-
-  def stream_name
-    "Eventvoted$#{id}"
   end
 end

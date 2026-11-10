@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_17_073144) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_06_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +66,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_073144) do
     t.jsonb "billetto_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "upvotes", default: 0, null: false
+    t.integer "downvotes", default: 0, null: false
     t.index ["external_id"], name: "index_events_on_external_id", unique: true
   end
 
